@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Radio Offline Notification</title>
+</head>
+<body>
+  <h1>Radio Station Status</h1>
+  <button id="notifyBtn">Notify Me if Offline</button>
+
+  <script>
+    const notifyBtn = document.getElementById('notifyBtn');
+
+    notifyBtn.addEventListener('click', () => {
+      // Check if Notification API is supported
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notifications.");
+        return;
+      }
+
+      // Request permission if not granted
+      if (Notification.permission === "granted") {
+        showNotification();
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            showNotification();
+          } else {
+            alert("Permission denied for notifications.");
+          }
+        });
+      } else {
+        alert("Notifications are blocked. Please enable them in your browser settings.");
+      }
+    });
+
+    function showNotification() {
+      const options = {
+        body: "Our radio station is currently offline. We'll be back shortly!",
+        icon: "https://cdn-icons-png.flaticon.com/512/159/159676.png", // Example icon URL
+        silent: false
+      };
+
+      const notification = new Notification("106.5 Radio Station Offline", options);
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    }
+  </script>
+</body>
+</html>
